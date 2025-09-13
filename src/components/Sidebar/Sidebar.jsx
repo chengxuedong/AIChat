@@ -1,11 +1,18 @@
-import React,{useState} from 'react'
+import React, { useState, useContext } from 'react'
 import './Sidebar.css'
 import { assets } from '../../assets/assets'
+import { Context } from '../../context/context'
 const Sidebar = () => {
     // const [extended, setExtended] = React.useState(false)
     const [extended, setExtended] = useState(false)
-
-  return (
+    const {onSent,prevPrompts,setRecentPrompts} = useContext(Context);
+    
+    const loadPrompt = async(prompt) => {
+        setRecentPrompts(prompt);
+        await onSent(prompt);
+    }
+  
+    return (
     <div className='sidebar'>
           <div className="top">
             <img onClick={()=>setExtended(prev=>!prev)} className='menu' src={assets.menu_icon} alt="" />
@@ -15,7 +22,17 @@ const Sidebar = () => {
               </div>
             {extended ?
             <div className="recent">
-                  <p className="recent-title">Recent</p>
+            <p className="recent-title">Recent</p>
+            {
+              prevPrompts.map((item, index) => {
+                return (
+                  <div onClick={()=>loadPrompt(item)} className="recent-entry">
+                    <img src={assets.message_icon} alt="" />
+                     {/* 只显示18个字符  */}
+                    <p>{item.slice(0,18)}....</p>
+                  </div>
+                )
+           })}
                   <div className="recent-entry">
                       <img src={assets.message_icon} alt="" />
                       <p>What is react ...</p>
