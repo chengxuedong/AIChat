@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: Outfit;
+}
+
+#root {
+  /*即使元素内容不足一屏，它也会至少占据整个屏幕高度*/
+  min-height: 100vh;
+  display: flex;
+}
