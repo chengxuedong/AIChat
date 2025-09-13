@@ -6,7 +6,7 @@ const Sidebar = () => {
     // const [extended, setExtended] = React.useState(false)
     const [extended, setExtended] = useState(false)
     const {onSent,prevPrompts,setRecentPrompts} = useContext(Context);
-    
+    //加载历史对话
     const loadPrompt = async(prompt) => {
         setRecentPrompts(prompt);
         await onSent(prompt);
@@ -22,21 +22,18 @@ const Sidebar = () => {
               </div>
             {extended ?
             <div className="recent">
-            <p className="recent-title">Recent</p>
-            {
-              prevPrompts.map((item, index) => {
-                return (
-                  <div onClick={()=>loadPrompt(item)} className="recent-entry">
-                    <img src={assets.message_icon} alt="" />
-                     {/* 只显示18个字符  */}
-                    <p>{item.slice(0,18)}....</p>
-                  </div>
-                )
-           })}
-                  <div className="recent-entry">
+              <p className="recent-title">Recent</p>
+              {/* 显示最近的对话 */}
+              {
+                prevPrompts.map((item, index) => {
+                  return (
+                    <div onClick={()=>loadPrompt(item)} className="recent-entry">
                       <img src={assets.message_icon} alt="" />
-                      <p>What is react ...</p>
-                  </div>
+                      {/* 只显示18个字符  */}
+                      <p>{item.slice(0,18)}...</p>
+                    </div>
+                  )
+                    })}
             </div>
             : null}
           </div>

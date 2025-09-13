@@ -16,22 +16,28 @@ const ContextProvider = (props) => {
             setResultData((prev) => prev + nextword);
         }, 75 * index);
     }
+
     const onSent = async (prompt) => {
         setResultData('')
         setLoading(true);
         setShowResult(true);
         let response;
+        console.log('prompt',prompt);
+        
+        //判断是加载历史对话还是新输入
         if(prompt !== undefined){
             response = await runChat(prompt);
             setRecentPrompt(prompt);
+            console.log(111);
+            
         }else {
             setPrevPrompts((prev) => [...prev, input]);
             setRecentPrompt(input);
             response = await runChat(input);
+            console.log(222);
+            
             }
-
-        setRecentPrompt(input);
-        setPrevPrompts((prev) => [...prev, input]);
+        //处理返回的内容，**加粗，*换行
         let responseArray = response.split('**');
         // let newResponse;如果没有像下面初始化，会在渲染内容时在内容最前面出现undefined
         let newResponse ='';
