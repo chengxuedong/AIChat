@@ -4,11 +4,11 @@ import { assets } from '../../assets/assets'
 import { Context } from '../../context/context'
 const Sidebar = () => {
     // const [extended, setExtended] = React.useState(false)
-    const [extended, setExtended] = useState(false)
-    const {onSent,prevPrompts,setRecentPrompts} = useContext(Context);
+    const [extended, setExtended] = useState(true)
+    const {onSent,prevPrompts,setRecentPrompt} = useContext(Context);
     //加载历史对话
     const loadPrompt = async(prompt) => {
-        setRecentPrompts(prompt);
+        setRecentPrompt(prompt);
         await onSent(prompt);
     }
   
@@ -27,7 +27,7 @@ const Sidebar = () => {
               {
                 prevPrompts.map((item, index) => {
                   return (
-                    <div onClick={()=>loadPrompt(item)} className="recent-entry">
+                    <div key={index} onClick={()=>loadPrompt(item)} className="recent-entry">
                       <img src={assets.message_icon} alt="" />
                       {/* 只显示18个字符  */}
                       <p>{item.slice(0,18)}...</p>

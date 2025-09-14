@@ -17,6 +17,8 @@ const ContextProvider = (props) => {
         }, 75 * index);
     }
 
+
+   
     const onSent = async (prompt) => {
         setResultData('')
         setLoading(true);
@@ -28,13 +30,11 @@ const ContextProvider = (props) => {
         if(prompt !== undefined){
             response = await runChat(prompt);
             setRecentPrompt(prompt);
-            console.log(111);
             
         }else {
             setPrevPrompts((prev) => [...prev, input]);
             setRecentPrompt(input);
             response = await runChat(input);
-            console.log(222);
             
             }
         //处理返回的内容，**加粗，*换行
