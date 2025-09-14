@@ -21,20 +21,20 @@ const Main = () => {
                        <p>How can I help you today?</p>
                    </div>
                    <div className="cards">
-                       <div onClick={()=>onSent('Suggest beautiful places to see on an upcoming road trip')} className="card">
-                           <p>Suggest beautiful places to see on an upcoming road trip</p>
+                            <div onClick={() => onSent('Recommend a city for a road trip on 100 words','new')} className="card">
+                                <p>Recommend a city for a road trip on 100 words</p>
                            <img src={assets.compass_icon} alt="" />
                        </div>
-                       <div onClick={()=>onSent('Briefly summarize this concept:urban planning')} className="card">
-                           <p>Briefly summarize this concept:urban planning</p>
+                            <div onClick={() => onSent('please tell me a short story on 150 words','new')} className="card">
+                                <p>please tell me a short story on 150 words</p>
                            <img src={assets.bulb_icon} alt="" />
                        </div>
-                       <div onClick={()=>onSent('Brainstorm team bonding activities for our work retreat')} className="card">
-                           <p>Brainstorm team bonding activities for our work retreat</p>
+                            <div onClick={() => onSent('Please give me some tips on how to improve my writing on 100 words','new')} className="card">
+                                <p>Please give me some tips on how to improve my writing on 100 words</p>
                            <img src={assets.message_icon} alt="" />
                        </div>
-                       <div onClick={()=>onSent('Improve the readability of the following code')} className="card">
-                           <p>Improve the readability of the following code</p>
+                            <div onClick={() => onSent('what can eating apple bring to me on 100 words','new')} className="card">
+                           <p>what can  eating apple bring to me on 100 words</p>
                            <img src={assets.code_icon} alt="" />
                        </div>
                    </div>    
@@ -53,7 +53,7 @@ const Main = () => {
                                     <hr />
                                     <hr />
                                 </div> :
-                                <p dangerouslySetInnerHTML={{ __html: resultData }}></p>}
+                                <p className='result-text'>{resultData}</p>}
                         </div>
                 </div>}
                 <div className="main-bottom">
@@ -62,11 +62,11 @@ const Main = () => {
                         <div>
                             <img src={assets.gallery_icon} alt="" />
                             <img src={assets.mic_icon} alt="" />
-                            <img onClick={()=>onSent()} src={assets.send_icon} alt="" />
+                            {input ? <img onClick={() => { onSent(input, 'new'); }} src={assets.send_icon} alt="" /> : null}
                         </div>
                     </div>
                     <p className="bottom-info">
-                        Gemini may display inaccurate info,includeing about people, so double-check its responses.Your privacy and Gemini apps.
+                        Gemini may display inaccurate info,includeing about people, so double-check its responses.
                     </p>
                 </div>
             </div>

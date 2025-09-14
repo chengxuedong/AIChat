@@ -9,57 +9,61 @@ const ContextProvider = (props) => {
     const [prevPrompts, setPrevPrompts] = useState([]);
     const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [resultData, setResultData] = useState('');
+    const [resultData, setResultData] = useState([]);
 
-    const delayPara = (index, nextword) => {
-        setTimeout(function() {
-            setResultData((prev) => prev + nextword);
-        }, 75 * index);
-    }
+    /* 逐 token 插入，token 可能是单词、空格、<br/>、<b>…</b> */
+    const streamTokens = (tokens) => {
+        tokens.forEach((tok, i) => {
+            setTimeout(() => {
+                setResultData(prev => [...prev, tok]);
+            }, 75 * i);
+        });
+    };
 
+    /* 把原始文本切成 React 节点数组，同时保留空格、处理 **bold** 和 *break* */
+    const parseResponse = (text) => {
+        // 1. 把连续 \n 压缩成两个（即只留一行空白）
+        const trimmed = text.trim().replace(/\n{2,}/g, '\n\n');
+
+        // 2. 按「段」拆开，段与段之间插入一个 <br />
+        const paragraphs = trimmed.split('\n\n').map(p => p.replace(/\n/g, ' ')); // 段内换行→空格
+
+        const nodes = [];
+        paragraphs.forEach((para, idx) => {
+            if (idx > 0) nodes.push(<br key={`gap-${idx}`} />); // 段落空行
+
+            // 3. 逐词包 span
+            para.split(/(\s+)/).filter(Boolean).forEach((tok, i) => {
+                if (tok === ' ') tok = '\u00A0'; // 防止合并
+                nodes.push(
+                    <span key={`${idx}-${i}`} className="fade-in-word">
+                        {tok}
+                    </span>
+                );
+            });
+        });
+        return nodes;
+    };
 
     const newChat = () => {
         setLoading(false);
         setShowResult(false);
+        setResultData([]);
     }
-    const onSent = async (prompt) => {
-        setResultData('')
+
+    const onSent = async (prompt, status) => {
+        setInput('');
+        setResultData([]);
         setLoading(true);
         setShowResult(true);
-        let response;
-        console.log('prompt',prompt);
-        
-        //判断是加载历史对话还是新输入
-        if(prompt !== undefined){
-            response = await runChat(prompt);
-            setRecentPrompt(prompt);
-            
-        }else {
-            setPrevPrompts((prev) => [...prev, input]);
-            setRecentPrompt(input);
-            response = await runChat(input);
-            
-            }
-        //处理返回的内容，**加粗，*换行
-        let responseArray = response.split('**');
-        // let newResponse;如果没有像下面初始化，会在渲染内容时在内容最前面出现undefined
-        let newResponse ='';
-        for (let i = 0; i < responseArray.length; i++) {
-            if (i === 0 || i % 2 === 0) {
-                newResponse += responseArray[i];
-            } else {
-                newResponse += '<b>' + responseArray[i] + '</b>';
-            }
-        }
-        let newResponse2 = newResponse.split('*').join('</br>');
-        let newResponseArray = newResponse2.split(' ');
-        for (let i = 0; i < newResponseArray.length; i++) {
-            const nextWord = newResponseArray[i];
-            delayPara(i, nextWord+' ');
-        };
+        if (status === 'new') setPrevPrompts(prev => [...prev, prompt]);
+        setRecentPrompt(prompt);
+
+        const response = await runChat(prompt);
+        const tokens = parseResponse(response);
+        streamTokens(tokens);
         setLoading(false);
-        setInput(''); 
-    }
+    };
 
     const contextValue = {
         prevPrompts,

@@ -147,6 +147,23 @@
     gap: 20px;
 }
 
+/* 每个词淡入 */
+.fade-in-word {
+    display: inline-block;
+    animation: fadeIn 0.45s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 .loader {
     width: 100%;
     display: flex;
