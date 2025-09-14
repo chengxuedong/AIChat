@@ -59,10 +59,18 @@ const ContextProvider = (props) => {
         if (status === 'new') setPrevPrompts(prev => [...prev, prompt]);
         setRecentPrompt(prompt);
 
-        const response = await runChat(prompt);
-        const tokens = parseResponse(response);
-        streamTokens(tokens);
-        setLoading(false);
+        //捕获错误，防止api过期或者大模型超载报错
+        const response = await runChat(prompt).catch((err) => {
+            console.error('Error during runChat:', err);
+            setLoading(false);
+            setResultData([<span key="error" style={{ color: 'red' }}>Error: {err.message}</span>]);
+        });
+        
+        if (response) {
+            const tokens = parseResponse(response);
+            streamTokens(tokens);
+            setLoading(false);
+        }
     };
 
     const contextValue = {

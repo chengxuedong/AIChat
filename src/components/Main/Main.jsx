@@ -4,8 +4,21 @@ import { assets } from '../../assets/assets'
 import { Context } from '../../context/context'
 const Main = () => {
   
-    const {onSent,recentPrompt,showResult,loading,resultData,setInput,input}=React.useContext(Context)
-
+    const { onSent, recentPrompt, showResult, loading, resultData, setInput, input } = React.useContext(Context)
+    
+    //点击Enter也可以调用onSent
+    React.useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                onSent(input, 'new');
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [input, onSent]);
     return (
         <div className='main'>
             <div className="nav">
