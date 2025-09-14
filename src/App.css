@@ -10,4 +10,14 @@
   /*即使元素内容不足一屏，它也会至少占据整个屏幕高度*/
   min-height: 100vh;
   display: flex;
+  animation: fadeIn 1.5s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
