@@ -1,4 +1,5 @@
 .sidebar {
+    max-width: 300px;
     min-height: 100vh;/* 侧边栏至少占满整个视口高度 */
     display: inline-flex;/* 使用 inline-flex 使侧边栏宽度自适应内容 */
     flex-direction: column;/* 垂直排列子元素 */
@@ -46,10 +47,15 @@
     align-items: start;
     gap: 10px;
     padding: 10px;
-    padding-right: 40px;
     border-radius: 50px;
     color: #282828;
     cursor: pointer;
+
+    p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 }
 
 .sidebar .recent-entry:hover {
