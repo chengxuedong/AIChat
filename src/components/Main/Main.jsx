@@ -2,10 +2,11 @@ import React from 'react'
 import './Main.css'
 import { assets } from '../../assets/assets'
 import { Context } from '../../context/context'
+import { useRef, useEffect } from 'react'
 const Main = () => {
   
     const { onSent, recentPrompt, showResult, loading, resultData, setInput, input } = React.useContext(Context)
-    
+    const resultBoxRef = useRef(null);
     //点击Enter也可以调用onSent
     React.useEffect(() => {
         const handleKeyDown = (event) => {
@@ -19,6 +20,16 @@ const Main = () => {
             document.removeEventListener('keydown', handleKeyDown);
         };
     }, [input, onSent]);
+
+    /* resultData 每变一次就滚一次 */
+    useEffect(() => {
+        if (!resultBoxRef.current) return;
+
+        resultBoxRef.current.scrollTo({
+          top: resultBoxRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+    }, [resultData]); 
     return (
         <div className='main'>
             <div className="nav">
@@ -53,7 +64,7 @@ const Main = () => {
                    </div>    
                 </>
                 :
-                    <div className='result'>
+                    <div className='result' ref={resultBoxRef}>
                         <div className="result-title">
                             <img src={assets.user_icon} alt="" />
                             <p>{recentPrompt}</p>
